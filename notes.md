@@ -33,4 +33,4 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 * **Functionality:** Orders files and directories alphabetically by name to ensure consistent and predictable output structure.
 * **Key Observations:** Relies on standard `java.io.File` methods and Java's sorting capabilities.
 
-Very interesting stuff.
+### Very interesting stuff.
