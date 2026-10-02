@@ -149,4 +149,38 @@ public class TruffulaPrinterTest {
         // Assert that the output matches the expected output exactly
         assertEquals(expected.toString(), output);
     }
+
+    @Test
+    void testPrintTreeBasicStructure(@TempDir File tempDir) throws Exception {
+        // Arrange: Create a nested structure in the temp directory
+        // tempDir/
+        //    file1.txt
+        //    subFolder/
+        //       file2.txt
+        File file1 = new File(tempDir, "file1.txt");
+        file1.createNewFile();
+
+        File subFolder = new File(tempDir, "subFolder");
+        subFolder.mkdir();
+
+        File file2 = new File(subFolder, "file2.txt");
+        file2.createNewFile();
+
+        TruffulaOptions options = new TruffulaOptions(tempDir, true, false);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+
+        TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
+
+        // Act
+        printer.printTree();
+
+        // Assert: Verify output contains the structure with correct indentation
+        String output = outputStream.toString();
+        
+        assertTrue(output.contains(tempDir.getName() + "/"));
+        assertTrue(output.contains("   file1.txt"));
+        assertTrue(output.contains("   subFolder/"));
+        assertTrue(output.contains("      file2.txt")); // 6 spaces
+    }
 }

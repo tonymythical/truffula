@@ -1,5 +1,6 @@
 import java.io.PrintStream;
 import java.util.List;
+import java.io.File;
 
 /**
  * TruffulaPrinter is responsible for printing a directory tree structure
@@ -114,5 +115,41 @@ public class TruffulaPrinter {
 
     out.println("printTree was called!");
     out.println("My options are: " + options);
+    if (options == null || options.getRoot() == null) {
+      return;
+    }
+    printNode(options.getRoot(), 0);
+  }
+
+  /**
+   * Recursive helper method to traverse and print files and directories.
+   * 
+   * @import java.io.File
+   * @param file the current file or directory to print
+   * @param level the current depth level for indentation
+   */
+  private void printNode(File file, int level) {
+    // Build indentation (3 spaces per level)
+    StringBuilder indent = new StringBuilder();
+    for (int i = 0; i < level; i++) {
+      indent.append("   ");
+    }
+
+    String name = file.getName();
+
+    if (file.isDirectory()) {
+      // Print directory name with a trailing slash
+      out.println(indent.toString() + name + "/");
+
+      File[] children = file.listFiles();
+      if (children != null) {
+        for (File child : children) {
+          printNode(child, level + 1);
+        }
+      }
+    } else {
+      // Print file name normally
+      out.println(indent.toString() + name);
+    }
   }
 }
