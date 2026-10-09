@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 import java.io.File;
 
@@ -113,8 +114,6 @@ public class TruffulaPrinter {
     // DO NOT USE SYSTEM.OUT.PRINTLN
     // USE out.println instead (will use your ColorPrinter)
 
-    out.println("printTree was called!");
-    out.println("My options are: " + options);
     if (options == null || options.getRoot() == null) {
       return;
     }
@@ -129,6 +128,18 @@ public class TruffulaPrinter {
    * @param level the current depth level for indentation
    */
   private void printNode(File file, int level) {
+    if (level > 0 && !options.isShowHidden() && file.isHidden()) {
+      return;
+    }
+
+    ConsoleColor color;
+    if (options.isUseColor()) {
+      color = colorSequence.get(level % colorSequence.size());
+    } else {
+      color = ConsoleColor.WHITE;
+    }
+    out.setCurrentColor(color);
+
     // Build indentation (3 spaces per level)
     StringBuilder indent = new StringBuilder();
     for (int i = 0; i < level; i++) {
@@ -143,6 +154,7 @@ public class TruffulaPrinter {
 
       File[] children = file.listFiles();
       if (children != null) {
+        AlphabeticalFileSorter.sort(children);
         for (File child : children) {
           printNode(child, level + 1);
         }
